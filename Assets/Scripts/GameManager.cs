@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     
     void Update()
     {
-        time = Time.time;
+        time = Time.timeSinceLevelLoad;
         timeManager.SetTime(time,minTime,maxTime);
         if (Input.GetKeyDown(KeyCode.Space))
         {
