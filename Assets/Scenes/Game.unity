@@ -495,7 +495,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
   SFXSource: {fileID: 1846347739}
   musicSource: {fileID: 613353939}
-  soundList: []
+  soundList:
+  - {fileID: 8300000, guid: 0679d38bd179d286bb14ecea8bfe789b, type: 3}
+  - {fileID: 8300000, guid: 50f22d58400aeb3228a0eaa368f03eb2, type: 3}
+  - {fileID: 8300000, guid: 9dcf1f1b8e9dd4708986aa02ec4ec4f4, type: 3}
+  - {fileID: 8300000, guid: ced4fcbc3f417ad1cbe032ec9679643c, type: 3}
 --- !u!4 &860656575
 Transform:
   m_ObjectHideFlags: 0
@@ -814,6 +818,12 @@ MonoBehaviour:
   timeInterval: 5
   minTime: 0
   timeManager: {fileID: 0}
+  score: 0
+  multiplier: 1
+  streak: 0
+  maxHealth: 3
+  health: 0
+  scoreText: {fileID: 0}
 --- !u!1 &1773658450
 GameObject:
   m_ObjectHideFlags: 0
