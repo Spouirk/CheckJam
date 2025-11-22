@@ -1,6 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
@@ -26,6 +24,7 @@ public class TimeManager : MonoBehaviour
 
     public void ResetTime(float minTime, float maxTime)
     {
+        
         SetMaxTime(maxTime);
         slider.minValue = minTime;
     }
