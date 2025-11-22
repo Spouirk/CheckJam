@@ -103,12 +103,12 @@ TextureImporter:
       name: Check6_0
       rect:
         serializedVersion: 2
-        x: 752
-        y: 370
-        width: 1608
-        height: 837
+        x: 1920
+        y: 0
+        width: 1920
+        height: 2160
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 93d28742dc4c50c48a7b29e535bfe34f
     internalID: 0
     vertices: []
     indices: 
