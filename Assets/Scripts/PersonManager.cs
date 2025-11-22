@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class PersonManager : MonoBehaviour
 {
-    [HideInInspector] public List<Check> checksPool = new List<Check>();        // Liste des différents checksPool possibles
-    [HideInInspector] public List<Person> personsPool = new List<Person>();     // Pool de personnes générées
+    [HideInInspector] public List<Check> checksPool = new List<Check>();        // Liste des diffï¿½rents checksPool possibles
+    [HideInInspector] public List<Person> personsPool = new List<Person>();     // Pool de personnes gï¿½nï¿½rï¿½es
 
-    public List<Sprite> accessoriesPool = new List<Sprite>();                   // Liste des accessoires différents
+    public List<Sprite> accessoriesPool = new List<Sprite>();                   // Liste des accessoires diffï¿½rents
 
     private KeyCode[] keysPool = { KeyCode.A, KeyCode.Z, KeyCode.E, KeyCode.R, KeyCode.U, KeyCode.I, KeyCode.O, KeyCode.P };
 
@@ -41,7 +41,7 @@ public class PersonManager : MonoBehaviour
     void Start()
     {
         InitializeChecks();
-        GeneratePersons();          // On génère les 2 premières personnes
+        GeneratePersons();          // On gï¿½nï¿½re les 2 premiï¿½res personnes
         ResetTimer();
         DisplayCurrentCheckInfo();
     }
@@ -51,7 +51,7 @@ public class PersonManager : MonoBehaviour
         HandleTimer();
         HandlePlayerInput();
 
-        // DEBUG : passage forcé à la personne suivante
+        // DEBUG : passage forcï¿½ ï¿½ la personne suivante
         if (Input.GetKeyDown(KeyCode.Space))
         {
             NextPerson();
@@ -78,10 +78,10 @@ public class PersonManager : MonoBehaviour
         }
     }
 
-    // Générer une personne aléatoire avec couleur et checks assignés
+    // Gï¿½nï¿½rer une personne alï¿½atoire avec couleur et checks assignï¿½s
     public Person GetRandomPerson()
     {
-        // Pool vide : Créer une nouvelle personne (nouvelle = inconnue)
+        // Pool vide : Crï¿½er une nouvelle personne (nouvelle = inconnue)
         if (personsPool.Count == 0)
         {
             Person person = CreateUniquePerson();
@@ -90,17 +90,17 @@ public class PersonManager : MonoBehaviour
             return person;
         }
 
-        // Pool existant : 70% de chance de prendre une personne existante, sinon en créer une nouvelle
+        // Pool existant : 70% de chance de prendre une personne existante, sinon en crï¿½er une nouvelle
         bool useExisting = Random.value < 0.7f;
 
         if (useExisting)
         {
-            // Ne pas modifier isKnown ici — on ne marque connu que quand on l'affiche réellement
+            // Ne pas modifier isKnown ici ï¿½ on ne marque connu que quand on l'affiche rï¿½ellement
             return personsPool[Random.Range(0, personsPool.Count)];
         }
         else
         {
-            // Créer une personne unique (toujours inconnue)
+            // Crï¿½er une personne unique (toujours inconnue)
             Person newPerson = CreateUniquePerson();
             newPerson.isKnown = false;
             personsPool.Add(newPerson);
@@ -114,7 +114,7 @@ public class PersonManager : MonoBehaviour
         Color32[] skinColors = new Color32[]
         {
             new Color32(240, 215, 180, 255), // Beige
-            new Color32(90, 50, 30, 255)     // Marron foncé
+            new Color32(90, 50, 30, 255)     // Marron foncï¿½
         };
 
         Person newPerson = null;
@@ -122,7 +122,7 @@ public class PersonManager : MonoBehaviour
 
         while (!unique)
         {
-            // Créer le GO
+            // Crï¿½er le GO
             GameObject go = new GameObject("Person_" + Random.Range(0, 99999));
             go.transform.SetParent(transform, false);
             Person person = go.AddComponent<Person>();
@@ -138,7 +138,7 @@ public class PersonManager : MonoBehaviour
             SpriteRenderer accessorySr = accessoryGo.AddComponent<SpriteRenderer>();
             accessorySr.sprite = person.accessory;
 
-            // Génération des checks
+            // Gï¿½nï¿½ration des checks
             int checksCount = Random.Range(1, maxChecksPerPerson + 1);
             person.personChecks = new List<Check>();
 
@@ -152,16 +152,17 @@ public class PersonManager : MonoBehaviour
             sr.sprite = person.personChecks[0].sprite;
             sr.color = person.skinColor;
 
-            // Vérifier que la personne est unique
+            // Vï¿½rifier que la personne est unique
             bool exists = false;
 
             foreach (var existing in personsPool)
             {
                 bool sameSkin = existing.skinColor.Equals(person.skinColor);
                 bool sameAccessory = existing.accessory == person.accessory;
+                bool sameChecks = ListsAreEqual(existing.personChecks, person.personChecks);
 
-                // Si l'exacte même existe
-                if (sameSkin && sameAccessory)
+                // Si l'exacte mï¿½me existe
+                if (sameSkin && sameAccessory &&  sameChecks)
                 {
                     exists = true;
                     break;
@@ -194,7 +195,7 @@ public class PersonManager : MonoBehaviour
         return true;
     }
 
-    // Définir la personne actuelle et la personne suivante
+    // Dï¿½finir la personne actuelle et la personne suivante
     public void GeneratePersons()
     {
         currentPerson = GetRandomPerson();
@@ -204,7 +205,7 @@ public class PersonManager : MonoBehaviour
         Debug.Log($"Current: {currentPerson.personName}, Next: {nextPerson.personName}");
     }
 
-    // Passer à la personne suivante quand le joueur à check la personne acutelle
+    // Passer ï¿½ la personne suivante quand le joueur ï¿½ check la personne acutelle
     public void NextPerson()
     {
         // La personne next devient current
@@ -212,7 +213,7 @@ public class PersonManager : MonoBehaviour
         currentPerson = nextPerson;
         currentPerson.gameObject.SetActive(true);
 
-        // Générer une nouvelle next
+        // Gï¿½nï¿½rer une nouvelle next
         nextPerson = GetRandomPerson();
         if (currentPerson != nextPerson) nextPerson.gameObject.SetActive(false);
 
@@ -232,7 +233,7 @@ public class PersonManager : MonoBehaviour
 
         Check expected = currentPerson.personChecks[currentCheckIndex];
 
-        // Vérifie si une touche du pool est appuyée
+        // Vï¿½rifie si une touche du pool est appuyï¿½e
         foreach (KeyCode key in keysPool)
         {
             if (Input.GetKeyDown(key))
@@ -313,7 +314,7 @@ public class PersonManager : MonoBehaviour
         // Attendre la fin de l'animation player
         yield return new WaitUntil(() => playerAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
-        // Logique après l’animation
+        // Logique aprï¿½s lï¿½animation
         if (currentCheckIndex >= currentPerson.personChecks.Count)
         {
             NextPerson();
@@ -349,7 +350,7 @@ public class PersonManager : MonoBehaviour
             {
                 keysContainer.GetChild(i).gameObject.SetActive(false);
             }
-            Debug.Log("Personne déjà connue — aucun indice affiché.");
+            Debug.Log("Personne dï¿½jï¿½ connue ï¿½ aucun indice affichï¿½.");
         }
         else
         {
@@ -372,7 +373,7 @@ public class PersonManager : MonoBehaviour
 
         if (timer <= 0)
         {
-            // Réduire vie
+            // Rï¿½duire vie
             gameManager.EchecCheck();
 
             NextPerson();
