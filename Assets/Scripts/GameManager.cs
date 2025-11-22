@@ -33,9 +33,6 @@ public class GameManager : MonoBehaviour
         //Réinitialisation de la barre de temps
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            minTime = time;
-            maxTime = time + timeInterval;
-            timeManager.ResetTime(minTime,maxTime);
             ReussiteCheck();
         }
             
@@ -45,7 +42,7 @@ public class GameManager : MonoBehaviour
     public void ReussiteCheck()
     {
         score += 10*multiplier;
-        if (maxTime - time >= timeInterval / 4 && multiplier < 4)
+        if (maxTime - time > timeInterval / 4 && multiplier < 4)
         {
             multiplier++;
         }
