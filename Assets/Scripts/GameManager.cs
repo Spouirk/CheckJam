@@ -66,9 +66,10 @@ public class GameManager : MonoBehaviour
         if (streak > 1)
         {
             combo.text = "x" + streak;
+            //change la couleur en fonction du multiplicateur
             switch (streak)
             {
-                case 2:combo.color = Color.cyan; break;
+                case 2:combo.color = Color.white; break;
                 case 3:combo.color = Color.yellow; break;
                 case 4:combo.color = Color.darkOrange; break;
                 default: combo.color = Color.red; break;
