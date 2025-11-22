@@ -18,12 +18,13 @@ public class GameManager : MonoBehaviour
     public int health;
     
     public TMP_Text scoreText;
+    public TMP_Text combo;
     void Start()
     {
         timeManager.SetMaxTime(maxTime);
         health = maxHealth;
         scoreText.text = "Score: " + score;
-        
+        combo.text = "";
     }
     
     void Update()
@@ -33,27 +34,41 @@ public class GameManager : MonoBehaviour
         //Réinitialisation de la barre de temps
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            minTime = time;
-            maxTime = time + timeInterval;
-            timeManager.ResetTime(minTime,maxTime);
             ReussiteCheck();
         }
-            
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            EchecCheck();
+        }
+    }
+
+    public void ResetTimer()
+    {
+        minTime = time;
+        maxTime = time + timeInterval;
+        timeManager.ResetTime(minTime,maxTime);
     }
     
     //Augmente le score du joueur et sa streak lors d'une réussite
     public void ReussiteCheck()
     {
-        score += 10*multiplier;
-        if (maxTime - time >= timeInterval / 4 && multiplier < 4)
-        {
-            multiplier++;
-        }
+        score += (int)(maxTime-time-timeInterval+10)*multiplier;
+        if (multiplier < 5) multiplier++;
         streak++;
-        minTime = time;
-        maxTime = time + timeInterval;
-        timeManager.ResetTime(minTime,maxTime);
         scoreText.text = "Score: " + score;
+        if (streak > 1)
+        {
+            combo.text = "x" + streak;
+            switch (streak)
+            {
+                case 2:combo.color = Color.cyan; break;
+                case 3:combo.color = Color.yellow; break;
+                case 4:combo.color = Color.darkOrange; break;
+                default: combo.color = Color.red; break;
+            }
+        }
+        ResetTimer();
     }
     
     //Reset la streak et perte d'une vie lors de l'échec
@@ -62,6 +77,10 @@ public class GameManager : MonoBehaviour
         streak = 0;
         multiplier = 1;
         health--;
+        combo.text = "";
+        minTime = time;
+        maxTime = time + timeInterval;
+        timeManager.ResetTime(minTime,maxTime);
     }
     
     
