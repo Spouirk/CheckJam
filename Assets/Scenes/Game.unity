@@ -498,7 +498,7 @@ MonoBehaviour:
   soundList:
   - {fileID: 8300000, guid: 089debf669439b97ea8c9aac3a4ee0c3, type: 3}
   - {fileID: 8300000, guid: 50f22d58400aeb3228a0eaa368f03eb2, type: 3}
-  - {fileID: 8300000, guid: 9dcf1f1b8e9dd4708986aa02ec4ec4f4, type: 3}
+  - {fileID: 8300000, guid: ee2c9f3eb87c215c595771d7469621cc, type: 3}
   - {fileID: 8300000, guid: ced4fcbc3f417ad1cbe032ec9679643c, type: 3}
 --- !u!4 &860656575
 Transform:
