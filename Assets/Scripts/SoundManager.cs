@@ -30,4 +30,14 @@ public class SoundManager : MonoBehaviour
     {
         instance.SFXSource.PlayOneShot(instance.soundList[(int)sound]);
     }
+
+    public static void SetMusicVolume(float volume)
+    {
+        instance.musicSource.volume = volume;
+    }
+
+    public static void SetSFXVolume(float volume)
+    {
+        instance.SFXSource.volume = volume;
+    }
 }
