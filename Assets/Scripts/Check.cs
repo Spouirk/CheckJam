@@ -6,6 +6,7 @@ public class Check
     public string checkName;    // Nom du check
     public Sprite sprite;       // Sprite du check
     public KeyCode key;         // Touche assignée
+    public int keyIndex;
 
     public Check(string title, Sprite sprite = null)
     {
@@ -14,8 +15,9 @@ public class Check
         // La touche sera assignée par le PersonManager
     }
 
-    public void AssignKey(KeyCode newKey)
+    public void AssignKey(KeyCode newKey, int index)
     {
         key = newKey;
+        keyIndex = index;
     }
 }

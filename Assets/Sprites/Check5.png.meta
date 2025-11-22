@@ -103,12 +103,12 @@ TextureImporter:
       name: Check5_0
       rect:
         serializedVersion: 2
-        x: 975
-        y: 168
-        width: 1385
-        height: 928
+        x: 1920
+        y: 0
+        width: 1920
+        height: 2160
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: e6364f2e81e22e046bb870d96ee2cd93
     internalID: 0
     vertices: []
     indices: 
