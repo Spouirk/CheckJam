@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[System.Serializable]
 public class Check
 {
     public string checkName;    // Nom du check
