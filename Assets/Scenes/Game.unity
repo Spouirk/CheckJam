@@ -496,7 +496,7 @@ MonoBehaviour:
   SFXSource: {fileID: 1846347739}
   musicSource: {fileID: 613353939}
   soundList:
-  - {fileID: 8300000, guid: 0679d38bd179d286bb14ecea8bfe789b, type: 3}
+  - {fileID: 8300000, guid: 089debf669439b97ea8c9aac3a4ee0c3, type: 3}
   - {fileID: 8300000, guid: 50f22d58400aeb3228a0eaa368f03eb2, type: 3}
   - {fileID: 8300000, guid: 9dcf1f1b8e9dd4708986aa02ec4ec4f4, type: 3}
   - {fileID: 8300000, guid: ced4fcbc3f417ad1cbe032ec9679643c, type: 3}
