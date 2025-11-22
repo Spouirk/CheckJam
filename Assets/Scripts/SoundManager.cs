@@ -11,13 +11,20 @@ public enum SoundType
 
 public class SoundManager : MonoBehaviour
 {
-    private static SoundManager instance;
+    public static SoundManager instance;
     [SerializeField] private AudioSource SFXSource;
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioClip[] soundList;
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        } else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Start()
@@ -39,12 +46,13 @@ public class SoundManager : MonoBehaviour
         instance.SFXSource.PlayOneShot(instance.soundList[(int)sound]);
     }
 
-    public static void SetMusicVolume(float volume)
+    public void SetMusicVolume(float volume)
     {
+        Debug.Log("test");
         instance.musicSource.volume = volume;
     }
 
-    public static void SetSFXVolume(float volume)
+    public void SetSFXVolume(float volume)
     {
         instance.SFXSource.volume = volume;
     }

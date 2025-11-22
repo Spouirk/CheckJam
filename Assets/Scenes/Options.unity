@@ -151,9 +151,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1161467667}
+  - {fileID: 927453360}
   - {fileID: 906656162}
   - {fileID: 2146618468}
-  - {fileID: 927453360}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -800,7 +800,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 0.27450982, g: 0.27450982, b: 0.27450982, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -824,12 +824,12 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 906656164}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: VolumeSliders, Assembly-CSharp
         m_MethodName: SetMusicVolume
         m_Mode: 0
         m_Arguments:
@@ -849,12 +849,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 906656161}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f56887aed7e8aa713bb5bffa2fc88be9, type: 3}
+  m_Script: {fileID: 11500000, guid: b79775cbcf9b71a46a978c25b0b86801, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  SFXSource: {fileID: 0}
-  musicSource: {fileID: 0}
-  soundList: []
+  m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
 --- !u!1 &927453359
 GameObject:
   m_ObjectHideFlags: 0
@@ -1529,12 +1526,12 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2146618470}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: VolumeSliders, Assembly-CSharp
         m_MethodName: SetSFXVolume
         m_Mode: 0
         m_Arguments:
@@ -1554,12 +1551,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2146618467}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f56887aed7e8aa713bb5bffa2fc88be9, type: 3}
+  m_Script: {fileID: 11500000, guid: b79775cbcf9b71a46a978c25b0b86801, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  SFXSource: {fileID: 0}
-  musicSource: {fileID: 0}
-  soundList: []
+  m_EditorClassIdentifier: Assembly-CSharp::VolumeSliders
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
