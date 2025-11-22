@@ -1,16 +1,31 @@
 using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
+
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public float time;
+    public float maxTime = 5f;
+    public float timeInterval = 5f;
+    public float minTime = 0f;
+    
+    public TimeManager timeManager;
     void Start()
     {
-        
+        timeManager.SetMaxTime(maxTime);
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        
+        time = Time.time;
+        timeManager.SetTime(time,minTime,maxTime);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            minTime = time;
+            maxTime = time + timeInterval;
+            timeManager.ResetTime(minTime,maxTime);
+        }
+            
     }
 }

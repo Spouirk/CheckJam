@@ -7,13 +7,13 @@ public class Check : MonoBehaviour
     public Color32 color;           // PLACEHOLDER : Couleur/image de la main
 
     public string title;            // Nom du check
-    public int nbOfKeys;            // Nombre de touches à appuyer
+    public int nbOfKeys;            // Nombre de touches Ã  appuyer
 
-    private List<KeyCode> keys;     // Liste des touches à appuyer pour effectuer le check
+    private List<KeyCode> keys;     // Liste des touches Ã  appuyer pour effectuer le check
 
     void Start()
     {
-        // Génération des touches
+        // GÃ©nÃ©ration des touches
         keys = KeyGenerator.GetRandomKeyList(nbOfKeys);
         if (keys.Count > 0 )
         {
