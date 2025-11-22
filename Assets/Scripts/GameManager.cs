@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -64,8 +65,12 @@ public class GameManager : MonoBehaviour
         multiplier = 1;
         health--;
         combo.text = "";
-        if (health <= 0) return;
-        healthCount.sprite = sprites[health - 1];
+        if (health <= 0)
+        {
+            SceneManager.LoadScene(4);
+        } else {
+            healthCount.sprite = sprites[health - 1];
+        }
     }
     
     
