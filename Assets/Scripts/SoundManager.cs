@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 
 public enum SoundType
 {
     CHECK,
+    SWOOSH,
     FAIL,
     MUSIC
 }
@@ -18,12 +20,18 @@ public class SoundManager : MonoBehaviour
         instance = this;
     }
 
-    private void start()
+    void Start()
     {
-        SFXSource = GetComponent<AudioSource>();
-        musicSource = GetComponent<AudioSource>();
         musicSource.clip = instance.soundList[(int)SoundType.MUSIC];
         musicSource.Play();
+    }
+
+    void Update()
+    {
+        if(!musicSource.isPlaying) 
+        {
+            musicSource.Play();
+        }
     }
 
     public static void PlaySound(SoundType sound)
