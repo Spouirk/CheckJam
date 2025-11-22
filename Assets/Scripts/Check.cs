@@ -1,34 +1,20 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Check : MonoBehaviour
+public class Check
 {
-    private SpriteRenderer sr;
-    public Color32 color;           // PLACEHOLDER : Couleur/image de la main
+    public string checkName;    // Nom du check
+    public Sprite sprite;       // Sprite du check
+    public KeyCode key;         // Touche assignée
 
-    public string title;            // Nom du check
-    public int nbOfKeys;            // Nombre de touches à appuyer
-
-    private List<KeyCode> keys;     // Liste des touches à appuyer pour effectuer le check
-
-    void Start()
+    public Check(string title, Sprite sprite = null)
     {
-        // Génération des touches
-        keys = KeyGenerator.GetRandomKeyList(nbOfKeys);
-        if (keys.Count > 0 )
-        {
-            foreach (var key in keys)
-            {
-                Debug.Log("Key: " + key);
-            }
-        }
-
-        // Couleur du sprite (SERA REMPLACE PAR IMAGE)
-        sr.color = color;
+        this.checkName = title;
+        this.sprite = sprite;
+        // La touche sera assignée par le PersonManager
     }
 
-    void Update()
+    public void AssignKey(KeyCode newKey)
     {
-        
+        key = newKey;
     }
 }
