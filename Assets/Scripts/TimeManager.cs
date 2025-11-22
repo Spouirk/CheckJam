@@ -16,9 +16,9 @@ public class TimeManager : MonoBehaviour
         timeLeft.color = gradient.Evaluate(1f);
     }
 
-    public void SetTime(float time, float minTime, float maxTime)
+    public void SetTime(float time)
     {
-        slider.value = minTime + maxTime - time;
+        slider.value = time;
         timeLeft.color = gradient.Evaluate(slider.normalizedValue);
     }
 

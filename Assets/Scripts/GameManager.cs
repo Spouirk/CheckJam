@@ -5,10 +5,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public float time;
-    public float maxTime = 5f;
-    public float timeInterval = 5f;
-    public float minTime;
+    public PersonManager personManager;
     public TimeManager timeManager;
     
     public int score = 0;
@@ -25,7 +22,6 @@ public class GameManager : MonoBehaviour
     public Image healthCount;
     void Start()
     {
-        timeManager.SetMaxTime(maxTime);
         health = maxHealth;
         healthCount.sprite = sprites[health-1];
         scoreText.text = "Score: " + score;
@@ -34,32 +30,16 @@ public class GameManager : MonoBehaviour
     
     void Update()
     {
-        time = Time.timeSinceLevelLoad;
-        timeManager.SetTime(time,minTime,maxTime);
-        //Réinitialisation de la barre de temps
         if (Input.GetKeyDown(KeyCode.Space))
         {
             ReussiteCheck();
         }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            EchecCheck();
-        }
-        if (time>=maxTime) EchecCheck();
-    }
-
-    public void ResetTimer()
-    {
-        minTime = time;
-        maxTime = time + timeInterval;
-        timeManager.ResetTime(minTime,maxTime);
     }
     
     //Augmente le score du joueur et sa streak lors d'une réussite
     public void ReussiteCheck()
     {
-        score += (int)(maxTime-time-timeInterval+10)*multiplier;
+        score += (int)(personManager.timer * 100 / personManager.baseTimer)*multiplier;
         if (multiplier < 5) multiplier++;
         streak++;
         scoreText.text = "Score: " + score;
@@ -75,7 +55,6 @@ public class GameManager : MonoBehaviour
                 default: combo.color = Color.red; break;
             }
         }
-        ResetTimer();
     }
     
     //Reset la streak et perte d'une vie lors de l'échec
@@ -85,7 +64,6 @@ public class GameManager : MonoBehaviour
         multiplier = 1;
         health--;
         combo.text = "";
-        ResetTimer();
         if (health <= 0) return;
         healthCount.sprite = sprites[health - 1];
     }

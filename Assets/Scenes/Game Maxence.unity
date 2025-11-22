@@ -344,7 +344,7 @@ GameObject:
   - component: {fileID: 588793518}
   - component: {fileID: 588793517}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: LetterCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1102,15 +1102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PersonManager
   checksPool: []
   personsPool: []
-  accessoriesPool:
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  accessoriesPool: []
   checkTitles:
   - Jutsu
   - Team Jul
@@ -1129,15 +1121,15 @@ MonoBehaviour:
   - {fileID: -193269531939598040, guid: fa53d315ccb71eb4ca3ecf73b0cb1bd9, type: 3}
   - {fileID: 346195544783568272, guid: fa2739e97b2ca364d846054cf1385a59, type: 3}
   - {fileID: -7275710704782452821, guid: 6c02e2266af82844d9d5ccdea4f3f5a4, type: 3}
-  baseCheckSprite: {fileID: 2483858089800127550, guid: b5fea0476c4ceeb48872affad4e019d3, type: 3}
-  srPlayer: {fileID: 836619319}
-  personAnimator: {fileID: 9100000, guid: 407ea867f30f8984ebc9d572880850b3, type: 2}
+  baseCheckSprite: {fileID: 0}
+  srPlayer: {fileID: 0}
+  personAnimator: {fileID: 0}
   currentPerson: {fileID: 0}
   nextPerson: {fileID: 0}
   maxChecksPerPerson: 3
   baseTimer: 100
   timerDecrease: 0.95
-  keysContainer: {fileID: 1307350510}
+  keysContainer: {fileID: 0}
 --- !u!4 &1630530522
 Transform:
   m_ObjectHideFlags: 0
