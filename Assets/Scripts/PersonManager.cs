@@ -329,39 +329,53 @@ public class PersonManager : MonoBehaviour
 
     void DisplayCurrentCheckInfo()
     {
+        if (currentPerson == null) return;
+
+        Check check = currentPerson.personChecks[currentCheckIndex];
+
+        // CAS 1 : Personne inconnue
         if (!currentPerson.isKnown)
         {
-            Check check = currentPerson.personChecks[currentCheckIndex];
+            // Tant que la personne est inconnue : on montre TOUS les checks
             currentPerson.GetComponent<SpriteRenderer>().sprite = check.sprite;
 
-            // Afficher les lettres
             for (int i = 0; i < keysContainer.childCount; i++)
-            {
                 keysContainer.GetChild(i).gameObject.SetActive(false);
-            }
+
             keysContainer.GetChild(check.keyIndex).gameObject.SetActive(true);
+
+            // SI TOUS LES CHECKS SONT VALIDÉS ELLE DEVIENT CONNUE
+            if (currentCheckIndex >= currentPerson.personChecks.Count - 1)
+            {
+                currentPerson.isKnown = true;
+                Debug.Log($"Personne {currentPerson.personName} devient CONNUE !");
+            }
+
+
+            return;
         }
-        else if (currentPerson.isKnown && currentCheckIndex == 0)
+
+        // CAS 2 : Personne connue
+        if (currentCheckIndex == 0)
         {
+            // Premier check : sprite neutre
             currentPerson.GetComponent<SpriteRenderer>().sprite = baseCheckSprite;
 
-            // Ne pas afficher les lettres
             for (int i = 0; i < keysContainer.childCount; i++)
-            {
                 keysContainer.GetChild(i).gameObject.SetActive(false);
-            }
-            Debug.Log("Personne d�j� connue � aucun indice affich�.");
+
+            Debug.Log("Personne connue : pas d'indice pour le premier check.");
+            return;
         }
-        else
-        {
-            Check check = currentPerson.personChecks[currentCheckIndex];
-            currentPerson.GetComponent<SpriteRenderer>().sprite = check.sprite;
-            for (int i = 0; i < keysContainer.childCount; i++)
-            {
-                keysContainer.GetChild(i).gameObject.SetActive(false);
-            }
-            keysContainer.GetChild(check.keyIndex).gameObject.SetActive(true);
-        }
+
+        // CAS 3 : Personne connue + check > 0
+        // On montre le check précédent
+        Check previousCheck = currentPerson.personChecks[currentCheckIndex - 1];
+
+        currentPerson.GetComponent<SpriteRenderer>().sprite = previousCheck.sprite;
+
+        for (int i = 0; i < keysContainer.childCount; i++)
+            keysContainer.GetChild(i).gameObject.SetActive(false);
     }
 
 
