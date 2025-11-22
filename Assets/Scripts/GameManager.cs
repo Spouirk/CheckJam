@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class GameManager : MonoBehaviour
@@ -19,10 +20,14 @@ public class GameManager : MonoBehaviour
     
     public TMP_Text scoreText;
     public TMP_Text combo;
+
+    public Sprite[] sprites;
+    public Image healthCount;
     void Start()
     {
         timeManager.SetMaxTime(maxTime);
         health = maxHealth;
+        healthCount.sprite = sprites[health-1];
         scoreText.text = "Score: " + score;
         combo.text = "";
     }
@@ -41,6 +46,7 @@ public class GameManager : MonoBehaviour
         {
             EchecCheck();
         }
+        if (time>=maxTime) EchecCheck();
     }
 
     public void ResetTimer()
@@ -60,9 +66,10 @@ public class GameManager : MonoBehaviour
         if (streak > 1)
         {
             combo.text = "x" + streak;
+            //change la couleur en fonction du multiplicateur
             switch (streak)
             {
-                case 2:combo.color = Color.cyan; break;
+                case 2:combo.color = Color.white; break;
                 case 3:combo.color = Color.yellow; break;
                 case 4:combo.color = Color.darkOrange; break;
                 default: combo.color = Color.red; break;
@@ -78,9 +85,9 @@ public class GameManager : MonoBehaviour
         multiplier = 1;
         health--;
         combo.text = "";
-        minTime = time;
-        maxTime = time + timeInterval;
-        timeManager.ResetTime(minTime,maxTime);
+        ResetTimer();
+        if (health <= 0) return;
+        healthCount.sprite = sprites[health - 1];
     }
     
     
