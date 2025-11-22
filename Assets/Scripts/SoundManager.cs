@@ -22,10 +22,16 @@ public class SoundManager : MonoBehaviour
 
     void Start()
     {
-        // SFXSource = GetComponent<AudioSource>();
-        // musicSource = GetComponent<AudioSource>();
         musicSource.clip = instance.soundList[(int)SoundType.MUSIC];
         musicSource.Play();
+    }
+
+    void Update()
+    {
+        if(!musicSource.isPlaying) 
+        {
+            musicSource.Play();
+        }
     }
 
     public static void PlaySound(SoundType sound)
