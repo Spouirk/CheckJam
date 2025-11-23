@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Sounds/fail.mp3.meta
 guid: ee2c9f3eb87c215c595771d7469621cc
+========
+guid: a1c9ab311c54d6dd2a1e0d892d4b4328
+>>>>>>>> origin/maxence:Assets/Sounds/cartoon_wink_magic_sparkle-6896.mp3.meta
 AudioImporter:
   externalObjects: {}
   serializedVersion: 8
