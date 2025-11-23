@@ -19,7 +19,7 @@ public class Carrier : MonoBehaviour
 
         if (scoreText != null)
         {
-            scoreText.text = "Votre score : " + score;
+            scoreText.text = "Votre score:" + "\n" + score;
         }
         else
         {

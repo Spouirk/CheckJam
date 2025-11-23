@@ -7,4 +7,9 @@ public class LoadGameButton : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
+
+    public void LoadHowToPlay()
+    {
+        SceneManager.LoadScene(5);
+    }
 }

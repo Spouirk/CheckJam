@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class PersonManager : MonoBehaviour
@@ -45,9 +44,14 @@ public class PersonManager : MonoBehaviour
 
     [Header("Canvas")]
     public Transform keysContainer;
+    public Transform posesContainer;
+
+    private bool pauseTimer;
 
     void Start()
     {
+        pauseTimer = false;
+
         keysDuration = 1;
         nbOfRound = 1; nbOfPersonGenerated = 0;
         roundText.text = "Person:" + nbOfRound.ToString();
@@ -61,7 +65,7 @@ public class PersonManager : MonoBehaviour
     private void Update()
     {
         HandleTimer();
-        HandlePlayerInput();
+        if (!pauseTimer) HandlePlayerInput();
 
         HandleKeysScale();
     }
@@ -99,7 +103,7 @@ public class PersonManager : MonoBehaviour
         }
 
         // Pool existant : 70% de chance de prendre une personne existante, sinon en créer une nouvelle
-        bool useExisting;       // = Random.value < 0.7f
+        bool useExisting;       
 
         if (nbOfRound == 1)
         {
@@ -107,7 +111,7 @@ public class PersonManager : MonoBehaviour
         }
         else
         {
-            if (nbOfRound % 5 == 0)
+            if (nbOfRound % 3 == 0)
             {
                 useExisting = false;   // Tous les 4 rounds
             }
@@ -308,8 +312,7 @@ public class PersonManager : MonoBehaviour
                     srPlayer.GetComponent<Animator>().SetTrigger("Success");
                     currentPerson.GetComponent<Animator>().SetTrigger("Success");
 
-                    // TODO : Faire une pause jusqu'a la fin de l'animation puis jouet le reste de la condition
-                   
+
                     // Jouer la musique
                     switch (expected.checkName)
                     {
@@ -351,12 +354,27 @@ public class PersonManager : MonoBehaviour
 
                     if (currentCheckIndex >= currentPerson.personChecks.Count)
                     {
+                        StartCoroutine(HandlePoseSequence(expected));
+
+                        /*
+                        for (int i = 0; i < posesContainer.childCount; i++)
+                            posesContainer.GetChild(i).gameObject.SetActive(false);
+
+                        posesContainer.GetChild(expected.keyIndex).gameObject.SetActive(true);
+                        srPlayer.gameObject.SetActive(false);
+                        currentPerson.gameObject.SetActive(false);
+
                         if (!currentPerson.isKnown)
                         {
                             currentPerson.isKnown = true;
                         }
 
                         NextPerson();
+
+                        posesContainer.GetChild(expected.keyIndex).gameObject.SetActive(false);
+                        srPlayer.gameObject.SetActive(true);
+                        currentPerson.gameObject.SetActive(true);
+                        */
                     }
                     else
                     {
@@ -372,61 +390,43 @@ public class PersonManager : MonoBehaviour
         }
     }
 
-    /*
-    void HandlePlayerInput()
+    private IEnumerator HandlePoseSequence(Check expected)
     {
-        if (currentPerson == null || isPlayingAnimation) return;
+        // Désactiver toutes les poses
+        for (int i = 0; i < posesContainer.childCount; i++)
+            posesContainer.GetChild(i).gameObject.SetActive(false);
 
-        Check expected = currentPerson.personChecks[currentCheckIndex];
+        // Activer la pose correcte
+        posesContainer.GetChild(expected.keyIndex).gameObject.SetActive(true);
 
-        foreach (KeyCode key in keysPool)
-        {
-            if (Input.GetKeyDown(key))
-            {
-                if (key == expected.key)
-                {
-                    StartCoroutine(HandleCheckAnimation(expected));
-                }
-                else
-                {
-                    Debug.Log("Mauvaise touche");
-                }
-            }
-        }
-    }*/
+        // Cacher joueur + personne
+        srPlayer.gameObject.SetActive(false);
+        currentPerson.gameObject.SetActive(false);
 
-    private IEnumerator HandleCheckAnimation(Check expected)
-    {
-        isPlayingAnimation = true;
+        // Marquer la personne connue si ce n'est pas le cas
+        if (!currentPerson.isKnown)
+            currentPerson.isKnown = true;
 
-        currentCheckIndex++;
+        keysContainer.gameObject.SetActive(false);
 
-        // Changer le sprite du personnage
-        currentPerson.GetComponent<SpriteRenderer>().sprite = expected.sprite;
-        srPlayer.sprite = expected.sprite;
+        pauseTimer = true;
 
-        // Lancer les animations
-        Animator playerAnim = srPlayer.GetComponent<Animator>();
-        Animator personAnim = currentPerson.GetComponent<Animator>();
+        // Pause de 1 seconde
+        yield return new WaitForSeconds(0.5f);
 
-        playerAnim.SetTrigger("Success");
-        personAnim.SetTrigger("Success");
+        pauseTimer = false;
 
-        // Attendre la fin de l'animation player
-        yield return new WaitUntil(() => playerAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+        keysContainer.gameObject.SetActive(true);
 
-        // Logique apr�s l�animation
-        if (currentCheckIndex >= currentPerson.personChecks.Count)
-        {
-            NextPerson();
-        }
-        else
-        {
-            DisplayCurrentCheckInfo();
-        }
+        // Passer à la personne suivante
+        NextPerson();
 
-        isPlayingAnimation = false;
+        // Nettoyage : désactiver la pose et réafficher
+        posesContainer.GetChild(expected.keyIndex).gameObject.SetActive(false);
+        srPlayer.gameObject.SetActive(true);
+        currentPerson.gameObject.SetActive(true);
     }
+
 
     void DisplayCurrentCheckInfo()
     {
@@ -487,7 +487,10 @@ public class PersonManager : MonoBehaviour
 
     void HandleTimer()
     {
-        timer -= Time.deltaTime;
+        if (!pauseTimer)
+        {
+            timer -= Time.deltaTime;
+        }
 
         gameManager.timeManager.SetTime(timer);
 
