@@ -871,13 +871,13 @@ MonoBehaviour:
   checksPool: []
   personsPool: []
   accessoriesPool:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: -876527707211424407, guid: 1b98188668b4e7a438fe09e55d443fbd, type: 3}
+  - {fileID: -6462837052223161987, guid: 642a01836ac5c3a47baf9ac389dffb1c, type: 3}
+  - {fileID: 4184360286708253926, guid: 0a639e1c3a0193145be0fcfb476c849c, type: 3}
+  - {fileID: -158804681713696551, guid: c9a01b4a233761047b228b07c095f933, type: 3}
+  - {fileID: -4896741720238350724, guid: 68d5c61fe2fbd374ca17433faf1d0b09, type: 3}
+  - {fileID: -5480788994993756330, guid: 4c48adf18e536744a96683b08286b5ae, type: 3}
+  - {fileID: 3904357803924335623, guid: 4939620f5bcb50f459f619b986117ec0, type: 3}
   checkTitles:
   - Jutsu
   - Team Jul

@@ -120,8 +120,18 @@ public class PersonManager : MonoBehaviour
         Person newPerson = null;
         bool unique = false;
 
+        int safety = 0; // Anti-loop
+
         while (!unique)
         {
+            safety++;
+
+            if (safety > 500)
+            {
+                Debug.LogError("Aucune combinaison unique restante !");
+                return null;
+            }
+
             // Créer le GO
             GameObject go = new GameObject("Person_" + Random.Range(0, 99999));
             go.transform.SetParent(transform, false);
@@ -137,6 +147,7 @@ public class PersonManager : MonoBehaviour
             accessoryGo.transform.SetParent(go.transform, false);
             SpriteRenderer accessorySr = accessoryGo.AddComponent<SpriteRenderer>();
             accessorySr.sprite = person.accessory;
+            accessorySr.sortingOrder = 2;
 
             // Génération des checks
             int checksCount = Random.Range(1, maxChecksPerPerson + 1);
@@ -151,6 +162,7 @@ public class PersonManager : MonoBehaviour
             SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = person.personChecks[0].sprite;
             sr.color = person.skinColor;
+            sr.sortingOrder = 1;
 
             // Vérifier que la personne est unique
             bool exists = false;
@@ -160,7 +172,6 @@ public class PersonManager : MonoBehaviour
                 bool sameSkin = existing.skinColor.Equals(person.skinColor);
                 bool sameAccessory = existing.accessory == person.accessory;
 
-                // Si l'exacte même existe
                 if (sameSkin && sameAccessory)
                 {
                     exists = true;
@@ -181,6 +192,7 @@ public class PersonManager : MonoBehaviour
 
         return newPerson;
     }
+
 
     private bool ListsAreEqual(List<Check> a, List<Check> b)
     {
@@ -328,39 +340,53 @@ public class PersonManager : MonoBehaviour
 
     void DisplayCurrentCheckInfo()
     {
+        if (currentPerson == null) return;
+
+        Check check = currentPerson.personChecks[currentCheckIndex];
+
+        // CAS 1 : Personne inconnue
         if (!currentPerson.isKnown)
         {
-            Check check = currentPerson.personChecks[currentCheckIndex];
+            // Tant que la personne est inconnue : on montre TOUS les checks
             currentPerson.GetComponent<SpriteRenderer>().sprite = check.sprite;
 
-            // Afficher les lettres
             for (int i = 0; i < keysContainer.childCount; i++)
-            {
                 keysContainer.GetChild(i).gameObject.SetActive(false);
-            }
+
             keysContainer.GetChild(check.keyIndex).gameObject.SetActive(true);
+
+            // SI TOUS LES CHECKS SONT VALIDÉS ELLE DEVIENT CONNUE
+            if (currentCheckIndex >= currentPerson.personChecks.Count - 1)
+            {
+                currentPerson.isKnown = true;
+                Debug.Log($"Personne {currentPerson.personName} devient CONNUE !");
+            }
+
+
+            return;
         }
-        else if (currentPerson.isKnown && currentCheckIndex == 0)
+
+        // CAS 2 : Personne connue
+        if (currentCheckIndex == 0)
         {
+            // Premier check : sprite neutre
             currentPerson.GetComponent<SpriteRenderer>().sprite = baseCheckSprite;
 
-            // Ne pas afficher les lettres
             for (int i = 0; i < keysContainer.childCount; i++)
-            {
                 keysContainer.GetChild(i).gameObject.SetActive(false);
-            }
-            Debug.Log("Personne déjà connue — aucun indice affiché.");
+
+            Debug.Log("Personne connue : pas d'indice pour le premier check.");
+            return;
         }
-        else
-        {
-            Check check = currentPerson.personChecks[currentCheckIndex];
-            currentPerson.GetComponent<SpriteRenderer>().sprite = check.sprite;
-            for (int i = 0; i < keysContainer.childCount; i++)
-            {
-                keysContainer.GetChild(i).gameObject.SetActive(false);
-            }
-            keysContainer.GetChild(check.keyIndex).gameObject.SetActive(true);
-        }
+
+        // CAS 3 : Personne connue + check > 0
+        // On montre le check précédent
+        Check previousCheck = currentPerson.personChecks[currentCheckIndex - 1];
+
+        currentPerson.GetComponent<SpriteRenderer>().sprite = previousCheck.sprite;
+
+        for (int i = 0; i < keysContainer.childCount; i++)
+            keysContainer.GetChild(i).gameObject.SetActive(false);
     }
 
 
