@@ -48,7 +48,7 @@ public class PersonManager : MonoBehaviour
 
     void Start()
     {
-        keysDuration = 2;
+        keysDuration = 1;
         nbOfRound = 1; nbOfPersonGenerated = 0;
         roundText.text = "Person:" + nbOfRound.ToString();
 
@@ -304,10 +304,50 @@ public class PersonManager : MonoBehaviour
                     currentPerson.GetComponent<SpriteRenderer>().sprite = expected.sprite;
 
                     srPlayer.sprite = currentPerson.GetComponent<SpriteRenderer>().sprite;
+                    //SoundManager.PlaySound(SoundType.SWOOCH);
                     srPlayer.GetComponent<Animator>().SetTrigger("Success");
                     currentPerson.GetComponent<Animator>().SetTrigger("Success");
 
                     // TODO : Faire une pause jusqu'a la fin de l'animation puis jouet le reste de la condition
+                   
+                    // Jouer la musique
+                    switch (expected.checkName)
+                    {
+                        case "Jutsu":
+                            SoundManager.PlaySound(SoundType.KATON);
+                            break;
+
+                        case "Team Jul":
+                            SoundManager.PlaySound(SoundType.JUL);
+                            break;
+
+                        case "Pinky":
+                            SoundManager.PlaySound(SoundType.PINKY);
+                            break;
+
+                        case "Love U":
+                            SoundManager.PlaySound(SoundType.HEARTBEAT);
+                            break;
+
+                        case "Kon":
+                            SoundManager.PlaySound(SoundType.KON);
+                            break;
+
+                        case "K-Pop Heart":
+                            SoundManager.PlaySound(SoundType.KPOP);
+                            break;
+
+                        case "High five":
+                            SoundManager.PlaySound(SoundType.SLAP);
+                            break;
+
+                        case "Fist Bump":
+                            SoundManager.PlaySound(SoundType.PUNCH);
+                            break;
+
+                        default:
+                            break;
+                    }
 
                     if (currentCheckIndex >= currentPerson.personChecks.Count)
                     {
@@ -325,7 +365,7 @@ public class PersonManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log($"Mauvaise touche");
+                    SoundManager.PlaySound(SoundType.FAIL);
                     gameManager.EchecCheck();
                 }
             }

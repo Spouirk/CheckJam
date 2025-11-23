@@ -28,14 +28,7 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score: " + score;
         combo.text = "";
     }
-    
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ReussiteCheck();
-        }
-    }
+   
     
     //Augmente le score du joueur et sa streak lors d'une réussite
     public void ReussiteCheck()

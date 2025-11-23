@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1de94b5bbe7561f4391b09e45898c15b
+guid: 89789991cc0811c499bcc745d976026b
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Super Mario 256
+  - Vibe
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
