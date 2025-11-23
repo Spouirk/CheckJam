@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
+using TMPro;
 using UnityEngine;
 
 public class PersonManager : MonoBehaviour
@@ -20,28 +20,44 @@ public class PersonManager : MonoBehaviour
     public SpriteRenderer srPlayer;
     public RuntimeAnimatorController personAnimator;
     public GameManager gameManager;
+    public TMP_Text roundText;
 
     [Header("Current & Next Person")]
     [HideInInspector] public Person currentPerson;
     [HideInInspector] public Person nextPerson;
 
-    public int maxChecksPerPerson = 3;
-
     private int currentCheckIndex = 0;
     [HideInInspector] public float timer;
     public float baseTimer = 100f;
-    public float timerDecrease = 0.95f;
+    public float timerDecrease = 0.99f;
+
+    public float keysDuration;
+    private float keysTimer = 0f;
+    public float keysDurationDecrease = 0.95f;
+    private int previousRound = -1;
+
+    [SerializeField] private int nbOfPersonGenerated;
+    public int nbOfRound;
 
     [Header("Animation")]
     private bool isPlayingAnimation = false;
 
     [Header("Canvas")]
     public Transform keysContainer;
+    public Transform posesContainer;
+
+    private bool pauseTimer;
 
     void Start()
     {
+        pauseTimer = false;
+
+        keysDuration = 1;
+        nbOfRound = 1; nbOfPersonGenerated = 0;
+        roundText.text = "Person:" + nbOfRound.ToString();
+
         InitializeChecks();
-        GeneratePersons();          // On g�n�re les 2 premi�res personnes
+        GeneratePersons();          // On génère les 2 premières personnes
         ResetTimer();
         DisplayCurrentCheckInfo();
     }
@@ -49,13 +65,9 @@ public class PersonManager : MonoBehaviour
     private void Update()
     {
         HandleTimer();
-        HandlePlayerInput();
+        if (!pauseTimer) HandlePlayerInput();
 
-        // DEBUG : passage forc� � la personne suivante
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            NextPerson();
-        }
+        HandleKeysScale();
     }
 
     // Initialise les checks avec touches uniques
@@ -81,7 +93,7 @@ public class PersonManager : MonoBehaviour
     // G�n�rer une personne al�atoire avec couleur et checks assign�s
     public Person GetRandomPerson()
     {
-        // Pool vide : Cr�er une nouvelle personne (nouvelle = inconnue)
+        // Pool vide : Créer une nouvelle personne (nouvelle = inconnue)
         if (personsPool.Count == 0)
         {
             Person person = CreateUniquePerson();
@@ -90,21 +102,45 @@ public class PersonManager : MonoBehaviour
             return person;
         }
 
-        // Pool existant : 70% de chance de prendre une personne existante, sinon en cr�er une nouvelle
-        bool useExisting = Random.value < 0.7f;
+        // Pool existant : 70% de chance de prendre une personne existante, sinon en créer une nouvelle
+        bool useExisting;       
+
+        if (nbOfRound == 1)
+        {
+            useExisting = false;
+        }
+        else
+        {
+            if (nbOfRound % 3 == 0)
+            {
+                useExisting = false;   // Tous les 4 rounds
+            }
+            else
+            {
+                useExisting = true;    // Les autres rounds
+            }
+        }
 
         if (useExisting)
         {
-            // Ne pas modifier isKnown ici � on ne marque connu que quand on l'affiche r�ellement
+            // Ne pas modifier isKnown ici on ne marque connu que quand on l'affiche réellement
             return personsPool[Random.Range(0, personsPool.Count)];
         }
         else
         {
             // Cr�er une personne unique (toujours inconnue)
             Person newPerson = CreateUniquePerson();
-            newPerson.isKnown = false;
-            personsPool.Add(newPerson);
-            return newPerson;
+
+            if (newPerson != null)
+            {
+                newPerson.isKnown = false;
+                personsPool.Add(newPerson);
+                return newPerson;
+            }
+            else
+            {
+                return personsPool[Random.Range(0, personsPool.Count)];
+            }
         }
     }
 
@@ -120,9 +156,18 @@ public class PersonManager : MonoBehaviour
         Person newPerson = null;
         bool unique = false;
 
+        int safety = 0; // Anti-loop
+
         while (!unique)
         {
-            // Cr�er le GO
+            safety++;
+
+            if (safety > 500)
+            {
+                return null;
+            }
+
+            // Créer le GO
             GameObject go = new GameObject("Person_" + Random.Range(0, 99999));
             go.transform.SetParent(transform, false);
             Person person = go.AddComponent<Person>();
@@ -137,9 +182,25 @@ public class PersonManager : MonoBehaviour
             accessoryGo.transform.SetParent(go.transform, false);
             SpriteRenderer accessorySr = accessoryGo.AddComponent<SpriteRenderer>();
             accessorySr.sprite = person.accessory;
+            accessorySr.sortingOrder = 2;
 
-            // G�n�ration des checks
-            int checksCount = Random.Range(1, maxChecksPerPerson + 1);
+            // Génération des checks
+            nbOfPersonGenerated++;
+            int checksCount = 1;            
+
+            if (nbOfPersonGenerated >= 4 && nbOfPersonGenerated <= 5)
+            {
+                checksCount = Random.Range(1, 3);       // 1 ou 2 checks
+            }
+            else if (nbOfPersonGenerated >= 6 && nbOfPersonGenerated <= 13)
+            {
+                checksCount = Random.Range(1, 4);       // 1 à 3 checks
+            }
+            else if (nbOfPersonGenerated >= 14)
+            {
+                checksCount = Random.Range(3, 5);       // 2 à 4 checks
+            }
+
             person.personChecks = new List<Check>();
 
             for (int i = 0; i < checksCount; i++)
@@ -151,18 +212,17 @@ public class PersonManager : MonoBehaviour
             SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = person.personChecks[0].sprite;
             sr.color = person.skinColor;
+            sr.sortingOrder = 1;
 
-            // V�rifier que la personne est unique
+            // Vérifier que la personne est unique
             bool exists = false;
 
             foreach (var existing in personsPool)
             {
                 bool sameSkin = existing.skinColor.Equals(person.skinColor);
                 bool sameAccessory = existing.accessory == person.accessory;
-                bool sameChecks = ListsAreEqual(existing.personChecks, person.personChecks);
 
-                // Si l'exacte m�me existe
-                if (sameSkin && sameAccessory &&  sameChecks)
+                if (sameSkin && sameAccessory)
                 {
                     exists = true;
                     break;
@@ -183,6 +243,7 @@ public class PersonManager : MonoBehaviour
         return newPerson;
     }
 
+    /*
     private bool ListsAreEqual(List<Check> a, List<Check> b)
     {
         if (a.Count != b.Count) return false;
@@ -194,20 +255,22 @@ public class PersonManager : MonoBehaviour
 
         return true;
     }
+    */
 
-    // D�finir la personne actuelle et la personne suivante
+    // Définir la personne actuelle et la personne suivante
     public void GeneratePersons()
     {
         currentPerson = GetRandomPerson();
         nextPerson = GetRandomPerson();
         if (currentPerson != nextPerson) nextPerson.gameObject.SetActive(false);
-
-        Debug.Log($"Current: {currentPerson.personName}, Next: {nextPerson.personName}");
     }
 
-    // Passer � la personne suivante quand le joueur � check la personne acutelle
+    // Passer à la personne suivante quand le joueur � check la personne acutelle
     public void NextPerson()
     {
+        nbOfRound++;
+        roundText.text = "Person:" + nbOfRound.ToString();
+
         // La personne next devient current
         currentPerson.gameObject.SetActive(false);
         currentPerson = nextPerson;
@@ -218,13 +281,12 @@ public class PersonManager : MonoBehaviour
         if (currentPerson != nextPerson) nextPerson.gameObject.SetActive(false);
 
         baseTimer *= timerDecrease;
+        keysDuration *= keysDurationDecrease;
 
         currentCheckIndex = 0;
         ResetTimer();
 
         DisplayCurrentCheckInfo();
-
-        Debug.Log($"New Current: {currentPerson.personName}, New Next: {nextPerson.personName}");
     }
 
     void HandlePlayerInput()
@@ -246,14 +308,73 @@ public class PersonManager : MonoBehaviour
                     currentPerson.GetComponent<SpriteRenderer>().sprite = expected.sprite;
 
                     srPlayer.sprite = currentPerson.GetComponent<SpriteRenderer>().sprite;
+                    //SoundManager.PlaySound(SoundType.SWOOCH);
                     srPlayer.GetComponent<Animator>().SetTrigger("Success");
                     currentPerson.GetComponent<Animator>().SetTrigger("Success");
 
-                    // Faire une pause jusqu'a la fin de l'animation puis jouet le reste de la condition
+
+                    // Jouer la musique
+                    switch (expected.checkName)
+                    {
+                        case "Jutsu":
+                            SoundManager.PlaySound(SoundType.KATON);
+                            break;
+
+                        case "Team Jul":
+                            SoundManager.PlaySound(SoundType.JUL);
+                            break;
+
+                        case "Pinky":
+                            SoundManager.PlaySound(SoundType.PINKY);
+                            break;
+
+                        case "Love U":
+                            SoundManager.PlaySound(SoundType.HEARTBEAT);
+                            break;
+
+                        case "Kon":
+                            SoundManager.PlaySound(SoundType.KON);
+                            break;
+
+                        case "K-Pop Heart":
+                            SoundManager.PlaySound(SoundType.KPOP);
+                            break;
+
+                        case "High five":
+                            SoundManager.PlaySound(SoundType.SLAP);
+                            break;
+
+                        case "Fist Bump":
+                            SoundManager.PlaySound(SoundType.PUNCH);
+                            break;
+
+                        default:
+                            break;
+                    }
 
                     if (currentCheckIndex >= currentPerson.personChecks.Count)
                     {
+                        StartCoroutine(HandlePoseSequence(expected));
+
+                        /*
+                        for (int i = 0; i < posesContainer.childCount; i++)
+                            posesContainer.GetChild(i).gameObject.SetActive(false);
+
+                        posesContainer.GetChild(expected.keyIndex).gameObject.SetActive(true);
+                        srPlayer.gameObject.SetActive(false);
+                        currentPerson.gameObject.SetActive(false);
+
+                        if (!currentPerson.isKnown)
+                        {
+                            currentPerson.isKnown = true;
+                        }
+
                         NextPerson();
+
+                        posesContainer.GetChild(expected.keyIndex).gameObject.SetActive(false);
+                        srPlayer.gameObject.SetActive(true);
+                        currentPerson.gameObject.SetActive(true);
+                        */
                     }
                     else
                     {
@@ -262,70 +383,50 @@ public class PersonManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log($"Mauvaise touche");
+                    SoundManager.PlaySound(SoundType.FAIL);
                     gameManager.EchecCheck();
                 }
             }
         }
     }
 
-    /*
-    void HandlePlayerInput()
+    private IEnumerator HandlePoseSequence(Check expected)
     {
-        if (currentPerson == null || isPlayingAnimation) return;
+        // Désactiver toutes les poses
+        for (int i = 0; i < posesContainer.childCount; i++)
+            posesContainer.GetChild(i).gameObject.SetActive(false);
 
-        Check expected = currentPerson.personChecks[currentCheckIndex];
+        // Activer la pose correcte
+        posesContainer.GetChild(expected.keyIndex).gameObject.SetActive(true);
 
-        foreach (KeyCode key in keysPool)
-        {
-            if (Input.GetKeyDown(key))
-            {
-                if (key == expected.key)
-                {
-                    StartCoroutine(HandleCheckAnimation(expected));
-                }
-                else
-                {
-                    Debug.Log("Mauvaise touche");
-                }
-            }
-        }
-    }*/
+        // Cacher joueur + personne
+        srPlayer.gameObject.SetActive(false);
+        currentPerson.gameObject.SetActive(false);
 
-    private IEnumerator HandleCheckAnimation(Check expected)
-    {
-        isPlayingAnimation = true;
+        // Marquer la personne connue si ce n'est pas le cas
+        if (!currentPerson.isKnown)
+            currentPerson.isKnown = true;
 
-        Debug.Log($"Bonne touche : {expected.key}");
+        keysContainer.gameObject.SetActive(false);
 
-        currentCheckIndex++;
+        pauseTimer = true;
 
-        // Changer le sprite du personnage
-        currentPerson.GetComponent<SpriteRenderer>().sprite = expected.sprite;
-        srPlayer.sprite = expected.sprite;
+        // Pause de 1 seconde
+        yield return new WaitForSeconds(0.5f);
 
-        // Lancer les animations
-        Animator playerAnim = srPlayer.GetComponent<Animator>();
-        Animator personAnim = currentPerson.GetComponent<Animator>();
+        pauseTimer = false;
 
-        playerAnim.SetTrigger("Success");
-        personAnim.SetTrigger("Success");
+        keysContainer.gameObject.SetActive(true);
 
-        // Attendre la fin de l'animation player
-        yield return new WaitUntil(() => playerAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+        // Passer à la personne suivante
+        NextPerson();
 
-        // Logique apr�s l�animation
-        if (currentCheckIndex >= currentPerson.personChecks.Count)
-        {
-            NextPerson();
-        }
-        else
-        {
-            DisplayCurrentCheckInfo();
-        }
-
-        isPlayingAnimation = false;
+        // Nettoyage : désactiver la pose et réafficher
+        posesContainer.GetChild(expected.keyIndex).gameObject.SetActive(false);
+        srPlayer.gameObject.SetActive(true);
+        currentPerson.gameObject.SetActive(true);
     }
+
 
     void DisplayCurrentCheckInfo()
     {
@@ -333,24 +434,16 @@ public class PersonManager : MonoBehaviour
 
         Check check = currentPerson.personChecks[currentCheckIndex];
 
+        for (int i = 0; i < keysContainer.childCount; i++)
+            keysContainer.GetChild(i).gameObject.SetActive(false);
+
+        keysContainer.GetChild(check.keyIndex).gameObject.SetActive(true);
+
         // CAS 1 : Personne inconnue
         if (!currentPerson.isKnown)
         {
             // Tant que la personne est inconnue : on montre TOUS les checks
             currentPerson.GetComponent<SpriteRenderer>().sprite = check.sprite;
-
-            for (int i = 0; i < keysContainer.childCount; i++)
-                keysContainer.GetChild(i).gameObject.SetActive(false);
-
-            keysContainer.GetChild(check.keyIndex).gameObject.SetActive(true);
-
-            // SI TOUS LES CHECKS SONT VALIDÉS ELLE DEVIENT CONNUE
-            if (currentCheckIndex >= currentPerson.personChecks.Count - 1)
-            {
-                currentPerson.isKnown = true;
-                Debug.Log($"Personne {currentPerson.personName} devient CONNUE !");
-            }
-
 
             return;
         }
@@ -361,9 +454,6 @@ public class PersonManager : MonoBehaviour
             // Premier check : sprite neutre
             currentPerson.GetComponent<SpriteRenderer>().sprite = baseCheckSprite;
 
-            for (int i = 0; i < keysContainer.childCount; i++)
-                keysContainer.GetChild(i).gameObject.SetActive(false);
-
             Debug.Log("Personne connue : pas d'indice pour le premier check.");
             return;
         }
@@ -373,15 +463,34 @@ public class PersonManager : MonoBehaviour
         Check previousCheck = currentPerson.personChecks[currentCheckIndex - 1];
 
         currentPerson.GetComponent<SpriteRenderer>().sprite = previousCheck.sprite;
-
-        for (int i = 0; i < keysContainer.childCount; i++)
-            keysContainer.GetChild(i).gameObject.SetActive(false);
     }
 
+    void HandleKeysScale()
+    {
+        bool roundChanged = nbOfRound != previousRound;
+
+        // --- Reset si nécessaire ---
+        if (!currentPerson.isKnown || roundChanged)
+        {
+            keysContainer.transform.localScale = Vector3.one;
+            keysTimer = 0f;
+            previousRound = nbOfRound;   // très important
+            return;                      // on ne fait rien d’autre ce frame
+        }
+
+        // --- Cas isKnown = true et round identique -> réduction ---
+        keysTimer += Time.deltaTime / keysDuration;
+
+        float newScale = Mathf.Lerp(1f, 0f, keysTimer);
+        keysContainer.transform.localScale = new Vector3(newScale, newScale, 1f);
+    }
 
     void HandleTimer()
     {
-        timer -= Time.deltaTime;
+        if (!pauseTimer)
+        {
+            timer -= Time.deltaTime;
+        }
 
         gameManager.timeManager.SetTime(timer);
 

@@ -1,3 +1,4 @@
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,14 +29,7 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score: " + score;
         combo.text = "";
     }
-    
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ReussiteCheck();
-        }
-    }
+   
     
     //Augmente le score du joueur et sa streak lors d'une réussite
     public void ReussiteCheck()
@@ -67,6 +61,9 @@ public class GameManager : MonoBehaviour
         combo.text = "";
         if (health <= 0)
         {
+            GameObject carrierObj = new GameObject("Carrier");
+            Carrier c = carrierObj.AddComponent<Carrier>();
+            c.score = score;
             SceneManager.LoadScene(4);
         } else {
             healthCount.sprite = sprites[health - 1];
