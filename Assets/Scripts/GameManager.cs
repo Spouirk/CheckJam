@@ -1,3 +1,4 @@
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -60,6 +61,9 @@ public class GameManager : MonoBehaviour
         combo.text = "";
         if (health <= 0)
         {
+            GameObject carrierObj = new GameObject("Carrier");
+            Carrier c = carrierObj.AddComponent<Carrier>();
+            c.score = score;
             SceneManager.LoadScene(4);
         } else {
             healthCount.sprite = sprites[health - 1];

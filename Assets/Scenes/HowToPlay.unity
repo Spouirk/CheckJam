@@ -660,8 +660,8 @@ MonoBehaviour:
     they will show you their greeting, but the next time you meet them, it will be
     up to you to show that you know their greeting.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d71c45a33150d1a458faf00678f4be58, type: 2}
-  m_sharedMaterial: {fileID: -5334622352641857152, guid: d71c45a33150d1a458faf00678f4be58, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b4c086f8001916f44abc1f38303de527, type: 2}
+  m_sharedMaterial: {fileID: -165118474344675914, guid: b4c086f8001916f44abc1f38303de527, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
