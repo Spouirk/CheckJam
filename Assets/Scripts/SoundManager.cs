@@ -3,8 +3,15 @@ using UnityEngine;
 
 public enum SoundType
 {
-    CHECK,
-    SWOOSH,
+    SWOOCH,
+    SLAP,
+    PUNCH,
+    PINKY,
+    KPOP,
+    KON,
+    KATON,
+    JUL,
+    HEARTBEAT,
     FAIL,
     MUSIC
 }

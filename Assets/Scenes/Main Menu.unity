@@ -1298,9 +1298,16 @@ MonoBehaviour:
   SFXSource: {fileID: 271251081}
   musicSource: {fileID: 513849286}
   soundList:
-  - {fileID: 8300000, guid: 0679d38bd179d286bb14ecea8bfe789b, type: 3}
   - {fileID: 8300000, guid: 50f22d58400aeb3228a0eaa368f03eb2, type: 3}
-  - {fileID: 8300000, guid: 9dcf1f1b8e9dd4708986aa02ec4ec4f4, type: 3}
+  - {fileID: 8300000, guid: 089debf669439b97ea8c9aac3a4ee0c3, type: 3}
+  - {fileID: 8300000, guid: b1eb1ef64fc799f41ab2be0c4217e3d9, type: 3}
+  - {fileID: 8300000, guid: a1c9ab311c54d6dd2a1e0d892d4b4328, type: 3}
+  - {fileID: 8300000, guid: e8670c1ae096cb774b812b5d5a99a785, type: 3}
+  - {fileID: 8300000, guid: 8423d39e16917bd239543da4803d3acf, type: 3}
+  - {fileID: 8300000, guid: 5894bb4a5878bac02af2a71cc744ec24, type: 3}
+  - {fileID: 8300000, guid: 059aaa726de79334a9fd047ea4f841b6, type: 3}
+  - {fileID: 8300000, guid: 60cb6a59357592d52b2fefa9236ce97f, type: 3}
+  - {fileID: 8300000, guid: ee2c9f3eb87c215c595771d7469621cc, type: 3}
   - {fileID: 8300000, guid: ced4fcbc3f417ad1cbe032ec9679643c, type: 3}
 --- !u!4 &2133225883
 Transform:
